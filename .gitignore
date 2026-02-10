@@ -1,0 +1,12 @@
+# Neovim
+lazy-lock.json
+plugin/
+spell/
+
+# Cache / data
+.shada
+.sessions/
+
+# OS
+.DS_Store
+Thumbs.db
