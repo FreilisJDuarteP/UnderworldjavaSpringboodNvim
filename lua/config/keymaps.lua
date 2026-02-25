@@ -11,27 +11,35 @@ vim.keymap.set("n", "<leader>e", function()
 end, { desc = "Explorer: Toggle & Focus Current File" })
 
 -- =========================================================
--- GUARDAR ARCHIVO
+-- GUARDAR + FORMAT (IDE STYLE)
 -- =========================================================
-vim.keymap.set({ "n", "i", "v" }, "<C-s>", "<cmd>w<cr><esc>", { desc = "File: Save" })
 
--- =========================================================
--- NAVEGACIÓN DE BUFFERS
--- =========================================================
-vim.keymap.set("n", "<Tab>", "<cmd>BufferLineCycleNext<cr>", { desc = "Buffer: Next" })
-vim.keymap.set("n", "<S-Tab>", "<cmd>BufferLineCyclePrev<cr>", { desc = "Buffer: Previous" })
+local function save_and_format()
+  -- Quita readonly si está activo
+  if vim.bo.readonly then
+    vim.bo.readonly = false
+  end
 
+  -- Format si hay LSP
+  pcall(function()
+    vim.lsp.buf.format({ async = false })
+  end)
+
+  -- Guardar forzado y silencioso (evita E13)
+  vim.cmd("silent! w!")
+end
+
+vim.keymap.set("n", "<C-s>", save_and_format, { desc = "File: Save + Format" })
+vim.keymap.set("i", "<C-s>", function()
+  save_and_format()
+end, { desc = "File: Save + Format" })
+vim.keymap.set("v", "<C-s>", function()
+  save_and_format()
+end, { desc = "File: Save + Format" })
 -- =========================================================
 -- CERRAR BUFFER
 -- =========================================================
 vim.keymap.set("n", "<leader>x", "<cmd>bp|bd #<cr>", { desc = "Buffer: Close Current" })
-
--- =========================================================
--- BÚSQUEDA (Telescope)
--- =========================================================
-vim.keymap.set("n", "<leader>ff", "<cmd>Telescope find_files<cr>", { desc = "Find: Files" })
-vim.keymap.set("n", "<leader>fg", "<cmd>Telescope live_grep<cr>", { desc = "Find: Text" })
-vim.keymap.set("n", "<leader>fb", "<cmd>Telescope buffers<cr>", { desc = "Find: Buffers" })
 
 -- =========================================================
 -- LSP (GENÉRICO)
@@ -113,11 +121,6 @@ vim.keymap.set("n", "<leader>rp", function()
 	require("toggleterm").exec("javac " .. file .. " && java " .. class)
 end, { desc = "Run: Java File" })
 
--- ▶ Spring Boot
-vim.keymap.set("n", "<leader>rs", function()
-	require("toggleterm").exec("mvn spring-boot:run")
-end, { desc = "Run: Spring Boot" })
-
 -- =========================================================
 -- TERMINAL (toggleterm.nvim)
 -- =========================================================
@@ -128,3 +131,8 @@ vim.keymap.set("t", "<C-h>", [[<Cmd>wincmd h<CR>]])
 vim.keymap.set("t", "<C-j>", [[<Cmd>wincmd j<CR>]])
 vim.keymap.set("t", "<C-k>", [[<Cmd>wincmd k<CR>]])
 vim.keymap.set("t", "<C-l>", [[<Cmd>wincmd l<CR>]])
+--java Project
+local java = require("config.java-runner")
+
+vim.keymap.set("n", "<leader>jt", java.test, { desc = "Java Test" })
+vim.keymap.set("n", "<leader>js", java.spring, { desc = "Spring Boot Run" })

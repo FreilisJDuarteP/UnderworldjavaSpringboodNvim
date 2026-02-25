@@ -1,18 +1,17 @@
 return {
-	{
-		"stevearc/conform.nvim",
-		event = { "BufWritePre" },
-		cmd = { "ConformInfo" },
-		opts = {
-			formatters_by_ft = {
-				lua = { "stylua" },
-				-- Asegúrate de haber instalado "google-java-format" en :Mason
-				java = { "google-java-format" },
-			},
-			format_on_save = {
-				timeout_ms = 500,
-				lsp_format = "fallback",
-			},
-		},
-	},
+  "stevearc/conform.nvim",
+  opts = {
+    format_on_save = {
+      timeout_ms = 2000,
+      lsp_fallback = true,
+    },
+    formatters_by_ft = {
+      lua = { "stylua" },
+      java = { "google-java-format" },
+      javascript = { "prettier" },
+      typescript = { "prettier" },
+      json = { "prettier" },
+      markdown = { "prettier" },
+    },
+  },
 }

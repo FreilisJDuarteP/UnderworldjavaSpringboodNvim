@@ -1,21 +1,28 @@
 return {
   {
     "nvim-treesitter/nvim-treesitter",
-    lazy = false,
     build = ":TSUpdate",
+    lazy = false,
 
     config = function()
-      local ts = require("nvim-treesitter")
+      local ok, ts = pcall(require, "nvim-treesitter.configs")
+      if not ok then
+        return
+      end
 
-      -- 1. Configuración básica (setup)
       ts.setup({
-        -- Opcional: solo si quieres mover donde se instalan
-        install_dir = vim.fn.stdpath("data") .. "/site",
-      })
+        ensure_installed = {
+          "lua",
+          "java",
+          "bash",
+          "json",
+          "markdown",
+          "markdown_inline",
+        },
 
-      -- 2. Instalación de parsers (el reemplazo de ensure_installed)
-      -- Esto es un "no-op" si ya están instalados, así que es seguro tenerlo aquí
-      ts.install({ "lua", "java", "markdown", "markdown_inline", "bash" })
+        highlight = { enable = true },
+        indent = { enable = true },
+      })
     end,
   },
 }

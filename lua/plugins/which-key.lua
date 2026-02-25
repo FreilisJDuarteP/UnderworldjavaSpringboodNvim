@@ -43,7 +43,7 @@ return {
 
 				-- Java
 				{ "<leader>j", group = "Java (JDTLS)" },
-				{ "<leader>r", group = "Run / Execute" },
+				{ "<leader>r", group = "Run / Execute" },  
 			})
 		end,
 	},
